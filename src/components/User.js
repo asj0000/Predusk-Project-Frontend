@@ -8,12 +8,11 @@ import {
   CircularProgress,
   IconButton,
   Chip,
-  CardContent,
-  Card
 } from "@mui/material";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
+import ProjectCard from "../components/ProjectCard";
 
 
 export default function User() {
@@ -31,6 +30,31 @@ export default function User() {
         .catch(err => console.error(err));
     }, []);
 
+    const updateUserField = async( field , value )=>{
+        try {
+            
+            const response = await axios.patch('http://localhost:4000/api/users/1', {
+                [field]: value,
+            })
+            const updatedUser = response.data.data;
+              setUser((prev) => ({
+                ...prev,
+                [field]: updatedUser[field],
+            }));
+            console.log( "Updated User ", updatedUser);
+            
+        } catch (error) {
+            console.error("Error updating user:", error);
+            
+        }
+    }
+
+    const handleKeyPress = (e , field)=>{
+        if (e.key === "Enter") {
+            updateUserField(field, user[field]);
+        }
+    }
+
     if (loading) return <CircularProgress/>
     return (
         <Box p={4}>
@@ -42,16 +66,19 @@ export default function User() {
                     label="Name"
                     value={user.name || ""}
                     onChange={(e) => setUser({ ...user, name: e.target.value })}
+                    onKeyDown={(e) => handleKeyPress(e, "name")}
                 />
                 <TextField
                     label="Email"
                     value={user.email || ""}
                     onChange={(e) => setUser({ ...user, email: e.target.value })}
+                    onKeyDown={(e) => handleKeyPress(e, "email")}
                 />
                 <TextField
                     label="Education"
                     value={user.education || ""}
                     onChange={(e) => setUser({ ...user, education: e.target.value })}
+                    onKeyDown={(e) => handleKeyPress(e, "education")}
                 />
                 <Typography 
                 variant="h6" 
@@ -103,67 +130,19 @@ export default function User() {
                 </Typography>
                 {Array.isArray(user.projects) 
                 ? user.projects.map((project, index) => (
-                    <Card 
-                        key={index} 
-                        sx={{ borderRadius: 3, boxShadow: 3, mb: 3, p: 2 }}
-                    >
-                        <CardContent>
-                        <Typography 
-                            variant="h6" 
-                            sx={{ fontWeight: 600, mb: 1, color: "primary.main" }}
-                        >
-                            {project.title}
-                        </Typography>
-                        <Typography 
-                            variant="body2" 
-                            sx={{ color: "text.secondary", mb: 2 }}
-                        >
-                            {project.description}
-                        </Typography>
-                        {project.links && (
-                            <Button 
-                            variant="outlined" 
-                            color="primary" 
-                            size="small" 
-                            href={project.links} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            >
-                            View Project
-                            </Button>
-                        )}
-                        </CardContent>
-                    </Card>
+                        <ProjectCard 
+                            key={index} 
+                            title={project.title} 
+                            description={project.description} 
+                            links={project.links} 
+                        />
                     ))
                 : user.projects && (
-                    <Card sx={{ borderRadius: 3, boxShadow: 3, mb: 3, p: 2 }}>
-                        <CardContent>
-                        <Typography 
-                            variant="h6" 
-                            sx={{ fontWeight: 600, mb: 1, color: "primary.main" }}
-                        >
-                            {user.projects.title}
-                        </Typography>
-                        <Typography 
-                            variant="body2" 
-                            sx={{ color: "text.secondary", mb: 2 }}
-                        >
-                            {user.projects.description}
-                        </Typography>
-                        {user.projects.links && (
-                            <Button 
-                            variant="outlined" 
-                            color="primary" 
-                            size="small" 
-                            href={user.projects.links} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            >
-                            View Project
-                            </Button>
-                        )}
-                        </CardContent>
-                    </Card>
+                        <ProjectCard 
+                            title={user.projects.title} 
+                            description={user.projects.description} 
+                            links={user.projects.links} 
+                        />
                     )
                 }
                 <Button
