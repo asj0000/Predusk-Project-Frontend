@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Box, Typography, Stack, TextField, Chip, IconButton, Button, CircularProgress, Tooltip,FormHelperText } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import  axios  from "axios";
+import api from '../api'
 
 
 
@@ -13,7 +13,7 @@ export default function EditSkill() {
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const response = await axios.get("http://localhost:4000/api/users");
+                const response = await api.get("/api/users");
                 const user = response.data.data[0];  
                 setSkills(user.skills || []); 
                 setLoading( false);
@@ -39,7 +39,7 @@ export default function EditSkill() {
         
             const updatedSkills = skills.filter((s)=> s !== skillToDelete)
             console.log("updatedSkills after filtering ", updatedSkills);
-            const response = await axios.patch("http://localhost:4000/api/users/1",{
+            const response = await api.patch("/api/users/1",{
                 skills: updatedSkills ,
                 overwrite: ["skills"], 
             })
@@ -61,7 +61,7 @@ export default function EditSkill() {
                 return; 
             }
             console.log("new skill , ", newSkill)
-            const response = await axios.patch("http://localhost:4000/api/users/1", {
+            const response = await api.patch("/api/users/1", {
                 skills: [newSkill.trim()],
             });
             console.log("Backend response", response)

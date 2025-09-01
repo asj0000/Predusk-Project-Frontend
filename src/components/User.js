@@ -11,9 +11,9 @@ import {
 } from "@mui/material";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { useNavigate } from "react-router-dom";
-import axios from 'axios';
 import ProjectCard from "../components/ProjectCard";
 import SearchSkill from '../components/SearchSkill';
+import api from '../api';
 
 
 export default function User() {
@@ -22,7 +22,7 @@ export default function User() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        axios.get("http://localhost:4000/api/users")
+        api.get("/api/users")
         .then(res => {
             console.log("Response ", res)
             setUser(res.data.data[0]);
@@ -34,7 +34,7 @@ export default function User() {
     const updateUserField = async( field , value )=>{
         try {
             
-            const response = await axios.patch('http://localhost:4000/api/users/1', {
+            const response = await api.patch('/api/users/1', {
                 [field]: value,
             })
             const updatedUser = response.data.data;

@@ -1,6 +1,6 @@
 import  { useState } from "react";
 import { TextField, Button, Box, Typography } from "@mui/material";
-import axios from "axios";
+import api from '../api'
 
 const SearchSkill = ({ userId }) => {
   const [query, setQuery] = useState("");
@@ -11,8 +11,8 @@ const SearchSkill = ({ userId }) => {
     if (!query.trim()) return;
 
       try {
-        const res = await axios.get(
-            `http://localhost:4000/api/users/${userId}/skills?name=${query}`
+        const res = await api.get(
+            `/api/users/${userId}/skills?name=${query}`
         );
 
         console.log("Res->", res);

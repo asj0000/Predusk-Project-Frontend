@@ -1,6 +1,6 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { TextField, Button, Box, Typography, Stack, FormHelperText, Link } from "@mui/material";
+import api from '../api'
 
 
 
@@ -14,7 +14,7 @@ export default function EditProject() {
     useEffect(()=>{
         const fetchProjects = async ()=>{
             try {
-                const response = await axios.get('http://localhost:4000/api/users');
+                const response = await api.get('/api/users');
                 const data = response.data.data[0];
                 setProjectData(data.projects || {});
 
@@ -28,8 +28,8 @@ export default function EditProject() {
 
     const handleSaveProject = async () => {
         try {
-            const response = await axios.patch(
-                "http://localhost:4000/api/users/1",
+            const response = await api.patch(
+                "/api/users/1",
                  {projects: projectData}  // send updated project object
             );
             console.log("Response ", response.data.data);
