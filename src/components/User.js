@@ -13,6 +13,7 @@ import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import ProjectCard from "../components/ProjectCard";
+import SearchSkill from '../components/SearchSkill';
 
 
 export default function User() {
@@ -110,6 +111,8 @@ export default function User() {
                 ))}
                 </Box>
 
+                <SearchSkill userId={1} />
+
                 <Button
                     variant="outlined"
                     onClick={() => navigate(`/edit-skill/${user.id}`)}
@@ -153,9 +156,10 @@ export default function User() {
                 </Button>
 
                 <TextField
-                    label="Work"
+                    label="Fresher"
                     value={user.work || ""}
                     onChange={(e) => setUser({ ...user, work: e.target.value })}
+                    disabled
                 />
                 {Object.entries(user.links || {}).map(([key, value]) => (
                     <div key={key} style={{ display: "flex", alignItems: "center", marginBottom: "1rem" }}>
