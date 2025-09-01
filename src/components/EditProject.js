@@ -16,7 +16,7 @@ export default function EditProject() {
             try {
                 const response = await api.get('/api/users');
                 const data = response.data.data[0];
-                setProjectData(data.projects || {});
+                setProjectData(data.projects[0] || {});
 
             } catch (error) {
                 console.log( "Error in fetching projects ",error);
